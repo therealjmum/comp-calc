@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Total Compensation Statement</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #f0f0f0; min-height: 100vh; }
+
+  header {
+    background: #000; border-bottom: 1px solid #1e1e1e;
+    padding: 0 40px; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-size: 1.15rem; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
+  .logo span { color: #0052ff; }
+  header nav a { color: #999; text-decoration: none; margin-left: 28px; font-size: 0.78rem; font-weight: 500; letter-spacing: 0.4px; text-transform: uppercase; transition: color 0.15s; }
+  header nav a:hover { color: #fff; }
+
+  .container { max-width: 1080px; margin: 36px auto; padding: 0 24px; }
+
+  .input-card { background: #111; border: 1px solid #1e1e1e; border-radius: 4px; padding: 36px 40px; margin-bottom: 24px; }
+  .input-card h2 { font-size: 0.68rem; color: #555; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  .section-divider { font-size: 0.62rem; color: #0052ff; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin: 22px 0 12px; border-top: 1px solid #1e1e1e; padding-top: 18px; }
+  .input-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 18px; }
+  .input-group label { display: block; font-size: 0.68rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 7px; }
+  .input-group input, .input-group select {
+    width: 100%; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 3px;
+    padding: 10px 14px; font-size: 0.9rem; color: #f0f0f0;
+    font-family: 'Inter', sans-serif; transition: border-color 0.15s;
+  }
+  .input-group input:focus, .input-group select:focus { outline: none; border-color: #0052ff; }
+  .input-group input::placeholder { color: #444; }
+  .input-group select option { background: #111; }
+  .input-hint { font-size: 0.65rem; color: #444; margin-top: 5px; }
+  .btn { margin-top: 24px; background: #0052ff; color: #fff; border: none; padding: 12px 32px; border-radius: 3px; font-size: 0.82rem; font-weight: 700; cursor: pointer; letter-spacing: 0.5px; text-transform: uppercase; transition: background 0.15s; }
+  .btn:hover { background: #0041cc; }
+  .btn.secondary { background: transparent; border: 1px solid #2a2a2a; color: #999; margin-top: 28px; }
+  .btn.secondary:hover { border-color: #555; color: #fff; background: transparent; }
+
+  .dashboard { display: none; }
+  .card { background: #111; border: 1px solid #1e1e1e; border-radius: 4px; padding: 28px; }
+  .card-label { font-size: 0.65rem; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
+
+  .top-row { display: grid; grid-template-columns: 210px 1fr; gap: 16px; margin-bottom: 16px; }
+
+  .donut-card { display: flex; flex-direction: column; align-items: center; }
+  .donut-wrap { position: relative; width: 155px; height: 155px; flex-shrink: 0; }
+  .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; width: 105px; }
+  .donut-center .d-name { font-size: 0.62rem; color: #555; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .donut-center .d-label { font-size: 0.55rem; color: #444; margin: 1px 0; }
+  .donut-center .d-total { font-size: 1rem; font-weight: 800; color: #fff; margin-top: 3px; }
+  .legend { margin-top: 18px; width: 100%; }
+  .legend-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px; border-radius: 2px; margin-bottom: 3px; border: 1px solid transparent; transition: border-color 0.15s, background 0.15s; }
+  .legend-item:hover { background: #161616; border-color: #2a2a2a; }
+  .legend-item.active { background: #0d1a3a; border-color: #0052ff33; }
+  .legend-left { display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 1px; flex-shrink: 0; }
+  .legend-label { font-size: 0.72rem; color: #aaa; font-weight: 500; }
+  .legend-val { font-size: 0.75rem; font-weight: 700; color: #fff; }
+
+  .equity-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .equity-title { font-size: 1rem; font-weight: 700; color: #fff; }
+  .equity-badge { background: #0d1a3a; color: #0052ff; font-size: 0.65rem; font-weight: 700; padding: 3px 10px; border-radius: 2px; border: 1px solid #0052ff44; text-transform: uppercase; letter-spacing: 0.5px; }
+  .proj-block { text-align: right; }
+  .proj-label { font-size: 0.65rem; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+  .proj-val { font-size: 1.3rem; font-weight: 800; color: #0052ff; }
+
+  .net-section { text-align: center; padding: 10px 0 14px; border-bottom: 1px solid #1e1e1e; margin-bottom: 14px; }
+  .net-label { font-size: 0.65rem; color: #555; text-transform: uppercase; letter-spacing: 1.5px; }
+  .net-big { font-size: 2.2rem; font-weight: 900; color: #fff; letter-spacing: -1px; line-height: 1.1; }
+  .net-shares { font-size: 0.75rem; color: #555; margin-top: 3px; }
+
+  .vested-row { display: flex; gap: 10px; margin-bottom: 16px; }
+  .vb { flex: 1; background: #0a0a0a; border: 1px solid #1e1e1e; border-radius: 3px; padding: 10px 14px; }
+  .vb.active-vb { border-color: #0052ff44; background: #0d1a3a; }
+  .vb-lbl { font-size: 0.62rem; color: #555; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+  .vb-val { font-size: 1rem; font-weight: 800; color: #fff; margin: 3px 0 1px; }
+  .vb-sh { font-size: 0.68rem; color: #555; }
+  .bar-wrap { height: 160px; }
+
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+  /* Grant rows */
+  .grant-item { border-bottom: 1px solid #1a1a1a; padding: 14px 0; }
+  .grant-item:last-child { border-bottom: none; }
+  .grant-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .grant-date { font-size: 0.72rem; color: #555; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .grant-pct { font-size: 0.72rem; color: #0052ff; font-weight: 700; }
+  .prog-track { background: #1e1e1e; border-radius: 2px; height: 4px; margin-bottom: 8px; }
+  .prog-fill { background: #0052ff; height: 4px; border-radius: 2px; }
+  .grant-meta { display: flex; justify-content: space-between; font-size: 0.72rem; color: #555; }
+  .grant-meta strong { color: #aaa; }
+
+  /* Vesting line chart container */
+  .line-wrap { position: relative; height: 190px; width: 100%; }
+
+  /* 401k card */
+  .four01-card { margin-bottom: 16px; }
+  .four01-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .stat-box { background: #0a0a0a; border: 1px solid #1e1e1e; border-radius: 3px; padding: 14px 16px; }
+  .stat-box.highlight { border-color: #0052ff44; background: #0d1a3a; }
+  .stat-lbl { font-size: 0.62rem; color: #555; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 5px; }
+  .stat-val { font-size: 1.05rem; font-weight: 800; color: #fff; }
+  .stat-sub { font-size: 0.65rem; color: #555; margin-top: 3px; }
+
+  .disclaimer { font-size: 0.68rem; color: #444; margin-top: 16px; padding-top: 12px; border-top: 1px solid #1a1a1a; line-height: 1.6; }
+
+  @media (max-width: 680px) {
+    .top-row, .bottom-row { grid-template-columns: 1fr; }
+    .four01-grid { grid-template-columns: 1fr 1fr; }
+    header nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">my<span>comp</span></div>
+  <nav>
+    <a href="#">Home</a><a href="#">Career</a><a href="#">Org Chart</a><a href="#">Reward Letter</a>
+  </nav>
+</header>
+
+<div class="container">
+  <!-- Input -->
+  <div class="input-card" id="inputCard">
+    <h2>Enter Your Compensation Details</h2>
+
+    <div class="section-divider">Personal</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Your Name</label>
+        <input id="empName" type="text" placeholder="Alex Smith" value="Alex Smith">
+      </div>
+      <div class="input-group">
+        <label>Start Date</label>
+        <input id="startDate" type="date" value="2022-03-01">
+        <div class="input-hint">Used to calculate vesting schedule</div>
+      </div>
+    </div>
+
+    <div class="section-divider">Cash Compensation</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Base Salary ($)</label>
+        <input id="salary" type="number" placeholder="120000" value="115000">
+      </div>
+      <div class="input-group">
+        <label>Target Bonus ($)</label>
+        <input id="bonus" type="number" placeholder="12000" value="11500">
+      </div>
+      <div class="input-group">
+        <label>One-Time Bonus ($)</label>
+        <input id="oneTime" type="number" placeholder="5000" value="12000">
+      </div>
+      <div class="input-group">
+        <label>Health Benefits ($)</label>
+        <input id="benefits" type="number" placeholder="15000" value="15000">
+      </div>
+    </div>
+
+    <div class="section-divider">401(k)</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Your Contribution (%)</label>
+        <input id="k401ContribPct" type="number" placeholder="6" value="6" min="0" max="100">
+        <div class="input-hint">Capped at IRS 2026 limit of $23,500</div>
+      </div>
+      <div class="input-group">
+        <label>Employer Match (%)</label>
+        <input id="k401MatchPct" type="number" placeholder="4" value="4" min="0" max="100">
+        <div class="input-hint">% of salary your employer matches</div>
+      </div>
+    </div>
+
+    <div class="section-divider">Equity</div>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>Total Equity Shares</label>
+        <input id="totalShares" type="number" placeholder="4800" value="4800">
+      </div>
+      <div class="input-group">
+        <label>Vesting Schedule</label>
+        <select id="vestingSchedule">
+          <option value="4cliff1">4-yr / 1-yr cliff</option>
+          <option value="4">4-yr monthly (no cliff)</option>
+          <option value="3cliff1">3-yr / 1-yr cliff</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label>Current Share Price ($)</label>
+        <input id="sharePrice" type="number" placeholder="42" value="42">
+      </div>
+    </div>
+
+    <button class="btn" onclick="generate()">Generate Statement</button>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dashboard" id="dashboard">
+
+    <div class="top-row">
+      <div class="card donut-card">
+        <div class="card-label">Compensation Mix</div>
+        <div class="donut-wrap">
+          <canvas id="donutChart"></canvas>
+          <div class="donut-center">
+            <div class="d-name" id="dName"></div>
+            <div class="d-label">Annual Total</div>
+            <div class="d-total" id="dTotal"></div>
+          </div>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+
+      <div class="card">
+        <div class="equity-header">
+          <div>
+            <div class="equity-title">Options &amp; Equity</div>
+            <span class="equity-badge" id="vestBadge">4-yr Vest / 1-yr Cliff</span>
+          </div>
+          <div class="proj-block">
+            <div class="proj-label">Projected (4yr @ 2×)</div>
+            <div class="proj-val" id="projVal"></div>
+          </div>
+        </div>
+        <div class="net-section">
+          <div class="net-label">Net Equity Value</div>
+          <div class="net-big" id="netEquity"></div>
+          <div class="net-shares" id="shareCount"></div>
+        </div>
+        <div class="vested-row">
+          <div class="vb active-vb">
+            <div class="vb-lbl">Vested</div>
+            <div class="vb-val" id="vestedVal"></div>
+            <div class="vb-sh" id="vestedSh"></div>
+          </div>
+          <div class="vb">
+            <div class="vb-lbl">Unvested</div>
+            <div class="vb-val" id="unvestedVal"></div>
+            <div class="vb-sh" id="unvestedSh"></div>
+          </div>
+        </div>
+        <div class="bar-wrap"><canvas id="barChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- 401k row -->
+    <div class="card four01-card">
+      <div class="card-label">401(k) Summary</div>
+      <div class="four01-grid">
+        <div class="stat-box highlight">
+          <div class="stat-lbl">Your Contribution</div>
+          <div class="stat-val" id="k401YourVal"></div>
+          <div class="stat-sub" id="k401YourPct"></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-lbl">Employer Match</div>
+          <div class="stat-val" id="k401MatchVal"></div>
+          <div class="stat-sub" id="k401MatchDesc"></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-lbl">Total Annual 401(k)</div>
+          <div class="stat-val" id="k401TotalVal"></div>
+          <div class="stat-sub">Combined contribution</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-lbl">IRS 2026 Limit</div>
+          <div class="stat-val">$23,500</div>
+          <div class="stat-sub" id="k401LimitStatus"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="card">
+        <div class="card-label">Equity Summary</div>
+        <div id="grantRows"></div>
+        <div class="disclaimer">Share price is modeled from your inputs. Actual value may vary with market conditions and future financing. Does not account for dilution or liquidation preference.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Vesting Schedule</div>
+        <div class="line-wrap"><canvas id="lineChart"></canvas></div>
+      </div>
+    </div>
+
+    <div style="text-align:center">
+      <button class="btn secondary" onclick="reset()">← Edit Details</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let donutInst, barInst, lineInst;
+const fmt = n => '$' + Math.round(n).toLocaleString();
+const IRS_LIMIT_2026 = 23500;
+const colors = ['#0052ff','#6b7fff','#00c2ff','#7c3aed','#e2e8f0','#f59e0b'];
+
+Chart.defaults.color = '#555';
+Chart.defaults.borderColor = '#1e1e1e';
+Chart.defaults.font.family = 'Inter, sans-serif';
+
+function calcVesting(totalShares, startDate, schedule) {
+  const now = new Date();
+  const start = new Date(startDate);
+  const msPerMonth = 30.44 * 24 * 3600 * 1000;
+  const monthsWorked = Math.max(0, (now - start) / msPerMonth);
+
+  let vestedShares = 0;
+  const totalMonths = schedule.startsWith('3') ? 36 : 48;
+  const hasCliff = schedule.includes('cliff');
+  const cliffMonths = 12;
+  const cliffShares = hasCliff ? totalShares * (cliffMonths / totalMonths) : 0;
+
+  if (hasCliff) {
+    if (monthsWorked < cliffMonths) {
+      vestedShares = 0;
+    } else {
+      vestedShares = cliffShares + (totalShares - cliffShares) * Math.min(1, (monthsWorked - cliffMonths) / (totalMonths - cliffMonths));
+    }
+  } else {
+    vestedShares = totalShares * Math.min(1, monthsWorked / totalMonths);
+  }
+
+  // Build monthly vesting series from start → start+totalMonths
+  const series = [];
+  for (let m = 0; m <= totalMonths; m++) {
+    let v = 0;
+    if (hasCliff) {
+      if (m < cliffMonths) v = 0;
+      else v = cliffShares + (totalShares - cliffShares) * Math.min(1, (m - cliffMonths) / (totalMonths - cliffMonths));
+    } else {
+      v = totalShares * Math.min(1, m / totalMonths);
+    }
+    const d = new Date(start);
+    d.setMonth(d.getMonth() + m);
+    series.push({ month: m, vested: Math.round(v), unvested: totalShares - Math.round(v), date: d });
+  }
+
+  return { vestedShares: Math.round(vestedShares), series, totalMonths, hasCliff, cliffMonths };
+}
+
+function generate() {
+  const name      = document.getElementById('empName').value || 'Employee';
+  const startDate = document.getElementById('startDate').value;
+  const salary    = +document.getElementById('salary').value    || 0;
+  const bonus     = +document.getElementById('bonus').value     || 0;
+  const oneTime   = +document.getElementById('oneTime').value   || 0;
+  const benefits  = +document.getElementById('benefits').value  || 0;
+  const totalSh   = +document.getElementById('totalShares').value || 0;
+  const price     = +document.getElementById('sharePrice').value  || 1;
+  const schedule  = document.getElementById('vestingSchedule').value;
+
+  // 401k
+  const contribPct = Math.min(100, +document.getElementById('k401ContribPct').value || 0);
+  const matchPct   = +document.getElementById('k401MatchPct').value  || 0;
+  const rawContrib = salary * contribPct / 100;
+  const yourContrib = Math.min(rawContrib, IRS_LIMIT_2026);
+  const employerMatch = salary * matchPct / 100;
+  const total401k  = yourContrib + employerMatch;
+
+  // Vesting
+  const { vestedShares, series, totalMonths, hasCliff, cliffMonths } = calcVesting(totalSh, startDate, schedule);
+  const unvestedSh  = totalSh - vestedShares;
+  const vestedVal   = vestedShares * price;
+  const unvestedVal = unvestedSh * price;
+  const netEquity   = totalSh * price;
+  const equityAnn   = netEquity / 4;
+  const totalComp   = salary + bonus + oneTime + benefits + equityAnn + yourContrib + employerMatch;
+
+  // ── Fill UI ──
+  document.getElementById('dName').textContent     = name + "'s";
+  document.getElementById('dTotal').textContent    = fmt(totalComp);
+  document.getElementById('netEquity').textContent = fmt(netEquity);
+  document.getElementById('shareCount').textContent = totalSh.toLocaleString() + ' shares total';
+  document.getElementById('vestedVal').textContent  = fmt(vestedVal);
+  document.getElementById('vestedSh').textContent   = vestedShares.toLocaleString() + ' shares';
+  document.getElementById('unvestedVal').textContent = fmt(unvestedVal);
+  document.getElementById('unvestedSh').textContent  = unvestedSh.toLocaleString() + ' shares';
+  document.getElementById('projVal').textContent    = fmt(netEquity * 2);
+  const scheduleLabels = { '4cliff1':'4-yr Vest / 1-yr Cliff', '4':'4-yr Monthly', '3cliff1':'3-yr Vest / 1-yr Cliff' };
+  document.getElementById('vestBadge').textContent  = scheduleLabels[schedule];
+
+  // 401k
+  document.getElementById('k401YourVal').textContent  = fmt(yourContrib);
+  document.getElementById('k401YourPct').textContent  = contribPct + '% of salary' + (rawContrib > IRS_LIMIT_2026 ? ' (IRS cap applied)' : '');
+  document.getElementById('k401MatchVal').textContent = fmt(employerMatch);
+  document.getElementById('k401MatchDesc').textContent = matchPct + '% of salary';
+  document.getElementById('k401TotalVal').textContent = fmt(total401k);
+  const remaining = IRS_LIMIT_2026 - yourContrib;
+  document.getElementById('k401LimitStatus').textContent = remaining > 0 ? fmt(remaining) + ' remaining room' : 'Limit reached';
+
+  // ── Donut ──
+  const segs = [
+    { label: 'Options',        val: equityAnn    },
+    { label: 'Salary',         val: salary       },
+    { label: 'Target Bonus',   val: bonus        },
+    { label: 'One-Time Bonus', val: oneTime      },
+    { label: 'Health Benefits',val: benefits     },
+    { label: '401(k)',         val: total401k    },
+  ].filter(s => s.val > 0);
+
+  if (donutInst) donutInst.destroy();
+  donutInst = new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+      labels: segs.map(s => s.label),
+      datasets: [{ data: segs.map(s => s.val), backgroundColor: colors, borderWidth: 0, hoverOffset: 6 }]
+    },
+    options: {
+      cutout: '70%',
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => '  ' + fmt(ctx.raw) }, backgroundColor: '#111', borderColor: '#2a2a2a', borderWidth: 1 }
+      }
+    }
+  });
+
+  document.getElementById('legend').innerHTML = segs.map((s, i) => `
+    <div class="legend-item ${i===0?'active':''}">
+      <div class="legend-left"><div class="dot" style="background:${colors[i]}"></div>
+      <span class="legend-label">${s.label}</span></div>
+      <span class="legend-val">${fmt(s.val)}</span>
+    </div>`).join('');
+
+  // ── Bar (equity by year from start) ──
+  const startY = new Date(startDate).getFullYear();
+  const barYears = Array.from({length: Math.ceil(totalMonths/12) + 1}, (_, i) => startY + i);
+  const annVest = totalSh / (totalMonths / 12);
+  const bNew  = barYears.map((_, i) => {
+    if (hasCliff && i === 0) return 0;
+    return Math.min(annVest, totalSh) * price * (1 + i * 0.1);
+  });
+  const bGrow = barYears.map((_, i) => bNew.slice(0, i).reduce((a, b) => a + b, 0) * 0.1);
+
+  if (barInst) barInst.destroy();
+  barInst = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: barYears,
+      datasets: [
+        { label: 'New Vested',         data: bNew,  backgroundColor: '#0052ff', borderRadius: 2, stack: 's' },
+        { label: 'Growth from Vested', data: bGrow, backgroundColor: '#6b7fff', borderRadius: 2, stack: 's' }
+      ]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 8, color: '#555' } },
+        tooltip: { backgroundColor: '#111', borderColor: '#2a2a2a', borderWidth: 1 }
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#555' } },
+        y: { grid: { color: '#161616' }, ticks: { callback: v => '$' + (v/1000).toFixed(0) + 'k', font: { size: 10 }, color: '#555' } }
+      }
+    }
+  });
+
+  // ── Grant rows ──
+  const start = new Date(startDate);
+  const pct = totalSh > 0 ? Math.round(vestedShares / totalSh * 100) : 0;
+  const cliffDate = new Date(start); cliffDate.setMonth(cliffDate.getMonth() + cliffMonths);
+  const endDate   = new Date(start); endDate.setMonth(endDate.getMonth() + totalMonths);
+  const fmtD = d => d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+
+  document.getElementById('grantRows').innerHTML = `
+    <div class="grant-item">
+      <div class="grant-header">
+        <div class="grant-date">Grant — ${fmtD(start)}</div>
+        <div class="grant-pct">${pct}% vested</div>
+      </div>
+      <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
+      <div class="grant-meta">
+        <span>${vestedShares.toLocaleString()} / ${totalSh.toLocaleString()} shares</span>
+        <strong>${fmt(vestedVal)} / ${fmt(netEquity)}</strong>
+      </div>
+    </div>
+    <div class="grant-item" style="padding-top:10px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px">
+        <div>
+          <div style="font-size:0.62rem;color:#555;text-transform:uppercase;letter-spacing:1px;font-weight:600">Start Date</div>
+          <div style="font-size:0.8rem;color:#aaa;margin-top:3px">${fmtD(start)}</div>
+        </div>
+        ${hasCliff ? `<div>
+          <div style="font-size:0.62rem;color:#555;text-transform:uppercase;letter-spacing:1px;font-weight:600">Cliff Date</div>
+          <div style="font-size:0.8rem;color:#aaa;margin-top:3px">${fmtD(cliffDate)}</div>
+        </div>` : '<div></div>'}
+        <div>
+          <div style="font-size:0.62rem;color:#555;text-transform:uppercase;letter-spacing:1px;font-weight:600">Fully Vested</div>
+          <div style="font-size:0.8rem;color:#aaa;margin-top:3px">${fmtD(endDate)}</div>
+        </div>
+      </div>
+    </div>`;
+
+  // ── Line chart — vesting series ──
+  // Sample every 3 months for readability
+  const step = 3;
+  const filtered = series.filter((_, i) => i % step === 0 || i === series.length - 1);
+  const lLabels = filtered.map(p => p.date.toLocaleDateString('en-US', {month:'short', year:'2-digit'}));
+  const lVested  = filtered.map(p => p.vested);
+  const lUnvested = filtered.map(p => p.unvested);
+  // Mark today
+  const now = new Date();
+  const todayIdx = filtered.reduce((best, p, i) => Math.abs(p.date - now) < Math.abs(filtered[best].date - now) ? i : best, 0);
+
+  if (lineInst) lineInst.destroy();
+  lineInst = new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: lLabels,
+      datasets: [
+        {
+          label: 'Vested Shares',
+          data: lVested,
+          borderColor: '#0052ff',
+          backgroundColor: 'rgba(0,82,255,0.12)',
+          fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2,
+          pointHoverRadius: 4
+        },
+        {
+          label: 'Unvested Shares',
+          data: lUnvested,
+          borderColor: '#333',
+          backgroundColor: 'rgba(255,255,255,0.03)',
+          fill: true, tension: 0.4, pointRadius: 0, borderWidth: 1,
+          pointHoverRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { font: { size: 10 }, boxWidth: 8, color: '#555' } },
+        tooltip: {
+          backgroundColor: '#111', borderColor: '#2a2a2a', borderWidth: 1,
+          callbacks: { label: ctx => '  ' + ctx.dataset.label + ': ' + ctx.raw.toLocaleString() + ' shares' }
+        },
+        annotation: {}
+      },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 9 }, maxTicksLimit: 8, color: '#555' } },
+        y: { grid: { color: '#161616' }, ticks: { font: { size: 10 }, color: '#555' }, min: 0, max: totalSh }
+      }
+    }
+  });
+
+  document.getElementById('inputCard').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+
+function reset() {
+  document.getElementById('inputCard').style.display = 'block';
+  document.getElementById('dashboard').style.display = 'none';
+}
+</script>
+</body>
+</html>
