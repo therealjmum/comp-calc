@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Total Compensation Statement</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23000'/><polyline points='3,26 10,18 16,21 24,10 29,6' stroke='%230052ff' stroke-width='2.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/><circle cx='29' cy='6' r='2.5' fill='%230052ff'/></svg>">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
@@ -110,6 +111,38 @@
 
   .disclaimer { font-size: 0.68rem; color: #444; margin-top: 16px; padding-top: 12px; border-top: 1px solid #1a1a1a; line-height: 1.6; }
 
+  @media print {
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: #fff !important; color: #111 !important; }
+    header { background: #fff !important; border-bottom: 2px solid #0052ff !important; padding: 12px 24px; position: relative; }
+    .logo { color: #111 !important; }
+    #mainNav { display: none !important; }
+    .print-banner { display: none !important; }
+    .container { margin: 16px auto; }
+    .card, .input-card, .four01-card { background: #fff !important; border: 1px solid #ddd !important; break-inside: avoid; }
+    .top-row { grid-template-columns: 200px 1fr; }
+    .bottom-row { grid-template-columns: 1fr 1fr; break-inside: avoid; }
+    .four01-grid { grid-template-columns: repeat(4,1fr); }
+    .card-label, .proj-label, .vb-lbl, .stat-lbl, .net-label, .grant-date, .input-group label { color: #888 !important; }
+    .net-big, .vb-val, .stat-val, .proj-val, .d-total, .legend-val { color: #111 !important; }
+    .legend-label, .net-shares, .vb-sh, .stat-sub, .grant-meta, .disclaimer { color: #555 !important; }
+    .equity-title { color: #111 !important; }
+    .equity-badge { background: #e8f0ff !important; color: #0052ff !important; border-color: #b3ccff !important; }
+    .vb { background: #f8f8f8 !important; border-color: #ddd !important; }
+    .vb.active-vb { background: #e8f0ff !important; border-color: #b3ccff !important; }
+    .stat-box { background: #f8f8f8 !important; border-color: #ddd !important; }
+    .stat-box.highlight { background: #e8f0ff !important; border-color: #b3ccff !important; }
+    .legend-item.active { background: #e8f0ff !important; border-color: #b3ccff !important; }
+    .legend-item:hover { background: transparent !important; }
+    .prog-track { background: #e0e0e0 !important; }
+    .grant-item { border-bottom-color: #eee !important; }
+    .btn.secondary { display: none !important; }
+    .donut-wrap { width: 140px; height: 140px; }
+    .line-wrap { height: 200px !important; }
+    .bar-wrap { height: 170px !important; }
+    .donut-center .d-name, .donut-center .d-label { color: #888 !important; }
+  }
+
   @media (max-width: 680px) {
     .top-row, .bottom-row { grid-template-columns: 1fr; }
     .four01-grid { grid-template-columns: 1fr 1fr; }
@@ -121,8 +154,8 @@
 
 <header>
   <div class="logo">my<span>comp</span></div>
-  <nav>
-    <a href="#">Home</a><a href="#">Career</a><a href="#">Org Chart</a><a href="#">Reward Letter</a>
+  <nav id="mainNav" style="display:none">
+    <a href="#" onclick="reset();return false;">Home</a><a href="https://github.com/therealjmum/org-intelligence" target="_blank">Org Chart</a><a href="#" onclick="printRewardLetter();return false;">Reward Letter</a>
   </nav>
 </header>
 
@@ -551,12 +584,28 @@ function generate() {
 
   document.getElementById('inputCard').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('mainNav').style.display = 'flex';
   window.scrollTo(0, 0);
+}
+
+function printRewardLetter() {
+  if (document.getElementById('dashboard').style.display === 'none') {
+    alert('Please generate your compensation statement first, then click Reward Letter to print it as a PDF.');
+    return;
+  }
+  const msg = document.createElement('div');
+  msg.id = 'printBanner';
+  msg.className = 'print-banner';
+  msg.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#0052ff;color:#fff;text-align:center;padding:12px;font-size:0.82rem;font-weight:600;letter-spacing:0.5px;z-index:9999';
+  msg.textContent = 'In the print dialog, set Destination to "Save as PDF" to export your reward letter.';
+  document.body.appendChild(msg);
+  setTimeout(() => { window.print(); document.body.removeChild(msg); }, 400);
 }
 
 function reset() {
   document.getElementById('inputCard').style.display = 'block';
   document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('mainNav').style.display = 'none';
 }
 </script>
 </body>
