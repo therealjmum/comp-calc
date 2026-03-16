@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="Inter, Arial, sans-serif">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+
+  <!-- Heading -->
+  <text x="600" y="160" text-anchor="middle" font-size="88" font-weight="900" fill="#fff">My Total <tspan fill="#0052ff">Comp</tspan></text>
+  <text x="600" y="220" text-anchor="middle" font-size="22" fill="#555" font-weight="400" letter-spacing="1">Visualize your full compensation in one place</text>
+
+  <!-- Dashboard preview card — inset ~75px (~2cm) from all edges -->
+  <rect x="75" y="265" width="1050" height="300" rx="6" fill="#111" stroke="#1e1e1e" stroke-width="1"/>
+
+  <!-- Mini donut (left) -->
+  <circle cx="175" cy="390" r="55" fill="none" stroke="#1e1e1e" stroke-width="20"/>
+  <circle cx="175" cy="390" r="55" fill="none" stroke="#0052ff" stroke-width="20" stroke-dasharray="145 345" stroke-dashoffset="86" transform="rotate(-90 175 390)"/>
+  <circle cx="175" cy="390" r="55" fill="none" stroke="#6b7fff" stroke-width="20" stroke-dasharray="86 345" stroke-dashoffset="-59" transform="rotate(-90 175 390)"/>
+  <circle cx="175" cy="390" r="55" fill="none" stroke="#00c2ff" stroke-width="20" stroke-dasharray="40 345" stroke-dashoffset="-145" transform="rotate(-90 175 390)"/>
+  <circle cx="175" cy="390" r="55" fill="none" stroke="#7c3aed" stroke-width="20" stroke-dasharray="28 345" stroke-dashoffset="-185" transform="rotate(-90 175 390)"/>
+  <text x="175" y="385" text-anchor="middle" font-size="9" fill="#555">Annual</text>
+  <text x="175" y="400" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">$215,400</text>
+
+  <!-- Divider -->
+  <line x1="265" y1="285" x2="265" y2="545" stroke="#1e1e1e" stroke-width="1"/>
+
+  <!-- Middle: net equity -->
+  <text x="530" y="308" text-anchor="middle" font-size="8" fill="#555" letter-spacing="1.5">NET EQUITY VALUE</text>
+  <text x="530" y="345" text-anchor="middle" font-size="32" font-weight="900" fill="#fff">$201,600</text>
+  <text x="530" y="363" text-anchor="middle" font-size="10" fill="#555">4,800 shares total</text>
+
+  <!-- Vested / Unvested -->
+  <rect x="290" y="378" width="160" height="50" rx="3" fill="#0d1a3a" stroke="#0052ff44" stroke-width="1"/>
+  <text x="302" y="396" font-size="7" fill="#555" letter-spacing="1" font-weight="600">VESTED</text>
+  <text x="302" y="414" font-size="14" font-weight="800" fill="#fff">$201,600</text>
+  <text x="302" y="424" font-size="8" fill="#555">4,800 shares</text>
+
+  <rect x="464" y="378" width="160" height="50" rx="3" fill="#0a0a0a" stroke="#1e1e1e" stroke-width="1"/>
+  <text x="476" y="396" font-size="7" fill="#555" letter-spacing="1" font-weight="600">UNVESTED</text>
+  <text x="476" y="414" font-size="14" font-weight="800" fill="#fff">$0</text>
+  <text x="476" y="424" font-size="8" fill="#555">0 shares</text>
+
+  <!-- 401k mini stats -->
+  <rect x="290" y="442" width="100" height="42" rx="3" fill="#0a0a0a" stroke="#1e1e1e" stroke-width="1"/>
+  <text x="300" y="457" font-size="7" fill="#555" letter-spacing="0.8">YOUR 401(K)</text>
+  <text x="300" y="474" font-size="12" font-weight="800" fill="#fff">$6,900</text>
+
+  <rect x="404" y="442" width="100" height="42" rx="3" fill="#0a0a0a" stroke="#1e1e1e" stroke-width="1"/>
+  <text x="414" y="457" font-size="7" fill="#555" letter-spacing="0.8">EMPLOYER</text>
+  <text x="414" y="474" font-size="12" font-weight="800" fill="#fff">$4,600</text>
+
+  <rect x="518" y="442" width="110" height="42" rx="3" fill="#0a0a0a" stroke="#1e1e1e" stroke-width="1"/>
+  <text x="528" y="457" font-size="7" fill="#555" letter-spacing="0.8">IRS LIMIT</text>
+  <text x="528" y="474" font-size="12" font-weight="800" fill="#fff">$23,500</text>
+
+  <!-- Divider -->
+  <line x1="660" y1="285" x2="660" y2="545" stroke="#1e1e1e" stroke-width="1"/>
+
+  <!-- Right: bar chart -->
+  <text x="690" y="305" font-size="8" fill="#555" letter-spacing="1.5" font-weight="700">EQUITY GROWTH</text>
+  <!-- gridlines -->
+  <line x1="690" y1="320" x2="1100" y2="320" stroke="#161616" stroke-width="1"/>
+  <line x1="690" y1="350" x2="1100" y2="350" stroke="#161616" stroke-width="1"/>
+  <line x1="690" y1="380" x2="1100" y2="380" stroke="#161616" stroke-width="1"/>
+  <line x1="690" y1="410" x2="1100" y2="410" stroke="#161616" stroke-width="1"/>
+  <line x1="690" y1="440" x2="1100" y2="440" stroke="#161616" stroke-width="1"/>
+  <!-- Bars -->
+  <rect x="710" y="410" width="50" height="30" rx="2" fill="#0052ff"/>
+  <rect x="710" y="400" width="50" height="10" rx="2" fill="#6b7fff"/>
+  <rect x="780" y="390" width="50" height="50" rx="2" fill="#0052ff"/>
+  <rect x="780" y="378" width="50" height="12" rx="2" fill="#6b7fff"/>
+  <rect x="850" y="370" width="50" height="70" rx="2" fill="#0052ff"/>
+  <rect x="850" y="356" width="50" height="14" rx="2" fill="#6b7fff"/>
+  <rect x="920" y="348" width="50" height="92" rx="2" fill="#0052ff"/>
+  <rect x="920" y="332" width="50" height="16" rx="2" fill="#6b7fff"/>
+  <rect x="990" y="328" width="50" height="112" rx="2" fill="#0052ff"/>
+  <rect x="990" y="310" width="50" height="18" rx="2" fill="#6b7fff"/>
+  <!-- x labels -->
+  <text x="735" y="460" text-anchor="middle" font-size="8" fill="#555">2022</text>
+  <text x="805" y="460" text-anchor="middle" font-size="8" fill="#555">2023</text>
+  <text x="875" y="460" text-anchor="middle" font-size="8" fill="#555">2024</text>
+  <text x="945" y="460" text-anchor="middle" font-size="8" fill="#555">2025</text>
+  <text x="1015" y="460" text-anchor="middle" font-size="8" fill="#555">2026</text>
+
+  <!-- Vesting line -->
+  <text x="690" y="490" font-size="8" fill="#555" letter-spacing="1.5" font-weight="700">VESTING</text>
+  <polyline points="695,530 760,525 825,515 890,500 955,480 1020,505 1085,510" stroke="#0052ff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="695,500 760,500 825,502 890,506 955,518 1020,505 1085,504" stroke="#333" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Bottom brand strip -->
+  <rect x="0" y="600" width="1200" height="30" fill="#000"/>
+  <text x="600" y="621" text-anchor="middle" font-size="12" font-weight="700" fill="#555">my<tspan fill="#0052ff">comp</tspan> · Know your worth</text>
+</svg>
